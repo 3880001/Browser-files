@@ -1,79 +1,237 @@
-HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secure File Portal</title>
+  <title>Workspace Portal | Sign In</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #f4f6f9;
-      --card: #ffffff;
-      --primary: #2563eb;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --navy: #0f172a;
+      --primary: #1e40af;
       --primary-hover: #1d4ed8;
       --danger: #dc2626;
       --text: #1e293b;
       --muted: #64748b;
       --border: #e2e8f0;
     }
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); margin: 0; padding: 24px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 760px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; }
-    h1, h2 { margin-top: 0; font-size: 1.35rem; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    * { box-sizing: border-box; font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Corporate Header */
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .nav-links span { cursor: default; }
+
+    /* Main Content Area */
+    .main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 32px 16px;
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    }
+    .login-card h1 {
+      margin: 0 0 6px;
+      font-size: 1.45rem;
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .subtitle {
+      margin: 0 0 28px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
     input[type="email"], input[type="password"] {
-      width: 100%; padding: 12px; margin: 8px 0 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem;
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: border-color 0.15s;
+    }
+    input[type="email"]:focus, input[type="password"]:focus {
+      outline: none;
+      border-color: var(--primary);
     }
     button {
-      background: var(--primary); color: #fff; border: none; padding: 10px 16px; border-radius: 8px;
-      font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.15s;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
     }
     button:hover { background: var(--primary-hover); }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-secondary { background: #e2e8f0; color: var(--text); }
-    .btn-secondary:hover { background: #cbd5e1; }
-    .btn-danger { background: var(--danger); padding: 6px 12px; font-size: 0.85rem; }
-    .btn-download { padding: 6px 12px; font-size: 0.85rem; margin-right: 6px; }
-    .upload-box {
-      border: 2px dashed #cbd5e1; border-radius: 10px; padding: 28px; text-align: center;
-      background: #f8fafc; margin-bottom: 16px;
+    .btn-full { width: 100%; margin-top: 4px; }
+    .btn-secondary { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-danger { background: var(--danger); padding: 6px 12px; font-size: 0.82rem; }
+    .btn-download { padding: 6px 12px; font-size: 0.82rem; margin-right: 6px; }
+
+    /* Authenticated Dashboard */
+    .dashboard-container {
+      width: 100%;
+      max-width: 820px;
+      align-self: flex-start;
     }
-    .status { margin-top: 10px; font-size: 0.9rem; color: var(--muted); }
-    .error { color: var(--danger); font-size: 0.9rem; margin-top: 8px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-    th { color: var(--muted); font-weight: 600; }
-    .hidden { display: none; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .upload-box {
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      background: #f8fafc;
+      margin-bottom: 20px;
+    }
+    .status { margin-top: 10px; font-size: 0.88rem; color: var(--muted); }
+    .error {
+      color: var(--danger);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-top: 14px;
+      display: none;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    th { color: var(--muted); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .hidden { display: none !important; }
     @media (max-width: 600px) {
+      .nav-links { display: none; }
       td:nth-child(2), th:nth-child(2) { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- LOGIN SCREEN -->
-    <div id="auth-card" class="card" style="max-width: 420px; margin: 60px auto;">
-      <h1>Personal Cloud Portal</h1>
-      <p style="color: var(--muted); font-size: 0.95rem;">Sign in to upload or download your files.</p>
+
+  <!-- TOP NAVIGATION -->
+  <header class="navbar">
+    <div class="brand">
+      <span class="brand-icon">W</span>
+      <span>Northstar Workspace</span>
+    </div>
+    <div class="nav-links">
+      <span>Overview</span>
+      <span>Resources</span>
+      <span>Support</span>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW -->
+  <main class="main">
+    <!-- GENERIC LOGIN SCREEN -->
+    <div id="auth-card" class="login-card">
+      <h1>Member Sign In</h1>
+      <p class="subtitle">Enter your credentials to access your workspace.</p>
       <form id="login-form">
-        <label>Email</label>
-        <input type="email" id="email" placeholder="you@example.com" required />
-        <label>Password</label>
-        <input type="password" id="password" placeholder="••••••••" required />
-        <button type="submit" style="width: 100%;">Sign In</button>
+        <label for="email">Work Email</label>
+        <input type="email" id="email" placeholder="name@organization.com" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required />
+
+        <button type="submit" id="login-btn" class="btn-full">Continue</button>
         <div id="auth-error" class="error"></div>
       </form>
     </div>
 
-    <!-- DASHBOARD SCREEN -->
-    <div id="app-card" class="hidden">
+    <!-- AUTHENTICATED WORKSPACE SCREEN (Only visible after login) -->
+    <div id="app-card" class="dashboard-container hidden">
       <div class="card">
-        <div class="header">
+        <div class="dash-header">
           <div>
-            <h1 style="margin-bottom: 4px;">My Files</h1>
-            <span id="user-email" style="color: var(--muted); font-size: 0.88rem;"></span>
+            <h2 style="margin: 0 0 4px; font-size: 1.25rem; color: var(--navy);">Workspace Records</h2>
+            <span id="user-email" style="color: var(--muted); font-size: 0.85rem;"></span>
           </div>
           <button id="logout-btn" class="btn-secondary">Sign Out</button>
         </div>
@@ -81,25 +239,30 @@ HTML
         <div class="upload-box">
           <input type="file" id="file-input" multiple style="margin-bottom: 12px;" />
           <br />
-          <button id="upload-btn">Upload Selected Files</button>
-          <div id="upload-status" class="status">Supports any file format (images, ZIP, CSV, PDF, binaries, etc.)</div>
+          <button id="upload-btn">Add Attachments</button>
+          <div id="upload-status" class="status">Select one or more items to attach to this workspace.</div>
         </div>
 
         <table>
           <thead>
             <tr>
-              <th>File Name</th>
+              <th>Item Name</th>
               <th>Size</th>
               <th style="text-align: right;">Actions</th>
             </tr>
           </thead>
           <tbody id="file-list">
-            <tr><td colspan="3" style="color: var(--muted);">Loading files...</td></tr>
+            <tr><td colspan="3" style="color: var(--muted);">Loading records...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-  </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    &copy; 2026 Northstar Workspace. Authorized access only.
+  </footer>
 
   <script>
     // =========================================================
@@ -110,11 +273,10 @@ HTML
     const BUCKET_NAME = 'vault';
     // =========================================================
 
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     const authCard = document.getElementById('auth-card');
     const appCard = document.getElementById('app-card');
     const loginForm = document.getElementById('login-form');
+    const loginBtn = document.getElementById('login-btn');
     const authError = document.getElementById('auth-error');
     const userEmailEl = document.getElementById('user-email');
     const fileInput = document.getElementById('file-input');
@@ -122,12 +284,21 @@ HTML
     const uploadStatus = document.getElementById('upload-status');
     const fileList = document.getElementById('file-list');
 
+    let sb = null;
     let currentUser = null;
 
-    // Check active session on page load
-    async function init() {
-      const { data: { session } } = await sb.auth.getSession();
-      handleSession(session);
+    function showError(msg) {
+      authError.textContent = msg;
+      authError.style.display = 'block';
+    }
+
+    function init() {
+      if (!SUPABASE_URL.startsWith('http') || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+        showError('Configuration incomplete: Replace YOUR_SUPABASE_URL and YOUR_SUPABASE_ANON_KEY in index.html.');
+        return;
+      }
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      sb.auth.getSession().then(({ data: { session } }) => handleSession(session));
       sb.auth.onAuthStateChange((_event, session) => handleSession(session));
     }
 
@@ -135,59 +306,76 @@ HTML
       if (session && session.user) {
         currentUser = session.user;
         userEmailEl.textContent = currentUser.email;
+        document.title = 'Northstar Workspace';
         authCard.classList.add('hidden');
         appCard.classList.remove('hidden');
         loadFiles();
       } else {
         currentUser = null;
+        document.title = 'Workspace Portal | Sign In';
         authCard.classList.remove('hidden');
         appCard.classList.add('hidden');
       }
     }
 
-    // Login
+    // Login Handler
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      authError.textContent = '';
+      authError.style.display = 'none';
+      if (!sb) {
+        showError('Supabase keys are not configured yet.');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Signing in...';
+
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+
       const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) authError.textContent = error.message;
+
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Continue';
+
+      if (error) {
+        showError(error.message);
+      }
     });
 
-    // Logout
+    // Logout Handler
     document.getElementById('logout-btn').addEventListener('click', async () => {
       await sb.auth.signOut();
     });
 
-    // Upload Files
+    // Upload Handler
     uploadBtn.addEventListener('click', async () => {
       const files = fileInput.files;
       if (!files.length) {
-        uploadStatus.textContent = 'Please select at least one file first.';
+        uploadStatus.textContent = 'Please select at least one item first.';
         return;
       }
       uploadBtn.disabled = true;
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        uploadStatus.textContent = `Uploading (${i + 1}/${files.length}): ${file.name}...`;
+        uploadStatus.textContent = `Processing (${i + 1}/${files.length}): ${file.name}...`;
         const filePath = `${currentUser.id}/${file.name}`;
         const { error } = await sb.storage.from(BUCKET_NAME).upload(filePath, file, {
           upsert: true
         });
         if (error) {
-          uploadStatus.textContent = `Error uploading ${file.name}: ${error.message}`;
+          uploadStatus.textContent = `Error: ${error.message}`;
           uploadBtn.disabled = false;
           return;
         }
       }
-      uploadStatus.textContent = 'Upload complete!';
+      uploadStatus.textContent = 'Completed.';
       fileInput.value = '';
       uploadBtn.disabled = false;
       loadFiles();
     });
 
-    // List Files
+    // List Items
     async function loadFiles() {
       fileList.innerHTML = '<tr><td colspan="3" style="color: var(--muted);">Loading...</td></tr>';
       const { data, error } = await sb.storage.from(BUCKET_NAME).list(currentUser.id, {
@@ -196,13 +384,13 @@ HTML
       });
 
       if (error) {
-        fileList.innerHTML = `<tr><td colspan="3" class="error">${error.message}</td></tr>`;
+        fileList.innerHTML = `<tr><td colspan="3" style="color: var(--danger);">${error.message}</td></tr>`;
         return;
       }
 
       const validFiles = (data || []).filter(f => f.name !== '.emptyFolderPlaceholder');
       if (!validFiles.length) {
-        fileList.innerHTML = '<tr><td colspan="3" style="color: var(--muted);">No files uploaded yet.</td></tr>';
+        fileList.innerHTML = '<tr><td colspan="3" style="color: var(--muted);">No records found.</td></tr>';
         return;
       }
 
@@ -215,14 +403,14 @@ HTML
           <td>${sizeKB}</td>
           <td style="text-align: right; white-space: nowrap;">
             <button class="btn-download" onclick="downloadFile('${encodeURIComponent(file.name)}')">Download</button>
-            <button class="btn-danger" onclick="deleteFile('${encodeURIComponent(file.name)}')">Delete</button>
+            <button class="btn-danger" onclick="deleteFile('${encodeURIComponent(file.name)}')">Remove</button>
           </td>
         `;
         fileList.appendChild(tr);
       });
     }
 
-    // Download File
+    // Download Item
     async function downloadFile(encodedName) {
       const fileName = decodeURIComponent(encodedName);
       const filePath = `${currentUser.id}/${fileName}`;
@@ -241,14 +429,14 @@ HTML
       URL.revokeObjectURL(url);
     }
 
-    // Delete File
+    // Delete Item
     async function deleteFile(encodedName) {
       const fileName = decodeURIComponent(encodedName);
-      if (!confirm(`Delete "${fileName}" permanently?`)) return;
+      if (!confirm(`Remove "${fileName}"?`)) return;
       const filePath = `${currentUser.id}/${fileName}`;
       const { error } = await sb.storage.from(BUCKET_NAME).remove([filePath]);
       if (error) {
-        alert('Delete failed: ' + error.message);
+        alert('Remove failed: ' + error.message);
         return;
       }
       loadFiles();
